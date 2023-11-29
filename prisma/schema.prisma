@@ -10,6 +10,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum PackageEnum {
+  FREE
+  BASIC
+  PRO
+  TEAM
+}
+
 model User {
   id        String   @id @default(uuid())
   name      String
@@ -19,35 +26,44 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Purchases Purchases[]
+  @@map("users")
 }
 
-enum Package {
-  FREE
-  BASIC
-  PRO
-  TEAM
-}
-
-model Packages {
-  id    String  @id @default(uuid())
-  type  Package
+model Package {
+  id    String      @id @default(uuid())
+  type  PackageEnum
   price Int
 
-  Purchases Purchases[]
+  Invoice Invoice[]
+
+  @@map("packages")
 }
 
-model Purchases {
+model Invoice {
   id          String    @id @default(uuid())
   userId      String
-  packagesId  String
-  paid        Boolean   @default(false)
-  paymentDate DateTime?
+  finalPrice  Int
+  packageId   String
   renewal     Boolean   @default(false)
   renewalDate DateTime?
   createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
 
-  User    User     @relation(fields: [userId], references: [id])
-  Package Packages @relation(fields: [packagesId], references: [id])
+  Package     Package       @relation(fields: [packageId], references: [id])
+  Installment Installment[]
+
+  @@map("invoices")
+}
+
+model Installment {
+  id                  String    @id @default(uuid())
+  numberOfInstallment Int       @default(1)
+  invoiceId           String
+  paid                Boolean   @default(false)
+  paymentDate         DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  Invoice Invoice @relation(fields: [invoiceId], references: [id])
+
+  @@map("purchases")
 }

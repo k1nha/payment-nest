@@ -1,7 +1,15 @@
 import { Module } from '@nestjs/common';
 import { PrismaService } from './prisma/prisma.service';
-import { UserRepository } from 'src/domain/repositories/user';
-import { PrismaUserRepository } from './repositories';
+import {
+  PrismaInstallmentRepository,
+  PrismaInvoiceRepository,
+  PrismaUserRepository,
+} from './repositories';
+import {
+  InstallmentRepository,
+  InvoiceRepository,
+  UserRepository,
+} from 'src/domain/repositories';
 
 @Module({
   imports: [],
@@ -10,6 +18,14 @@ import { PrismaUserRepository } from './repositories';
     {
       provide: UserRepository,
       useClass: PrismaUserRepository,
+    },
+    {
+      provide: InstallmentRepository,
+      useClass: PrismaInstallmentRepository,
+    },
+    {
+      provide: InvoiceRepository,
+      useClass: PrismaInvoiceRepository,
     },
   ],
   exports: [PrismaService, UserRepository],
