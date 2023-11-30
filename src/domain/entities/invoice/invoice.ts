@@ -5,7 +5,7 @@ export class InvoiceEntity implements Invoice {
   userId: string;
   finalPrice: number;
   packageId: string;
-  renewal: boolean;
-  renewalDate: Date;
+  renewal: boolean = false;
+  renewalDate: Date | null;
   createdAt: Date;
 }

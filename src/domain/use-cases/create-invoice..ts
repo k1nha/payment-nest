@@ -1,10 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UseCase } from 'src/core/base';
-import { InstallmentRepository, InvoiceRepository } from '../repositories';
+import {
+  InstallmentRepository,
+  InvoiceRepository,
+  PackageRepository,
+  UserRepository,
+} from '../repositories';
 import { Installment, Invoice } from '@prisma/client';
 
 type Input = {
-  userId: string;
+  userEmail: string;
   packageId: string;
   renewal?: boolean;
 };
@@ -14,21 +19,33 @@ type Output = {
   installment: Installment[];
 };
 
-// one purchase makes a 12 invoices
 @Injectable()
 export class CreateInvoice implements UseCase<Input, Output> {
   constructor(
     private invoiceRepository: InvoiceRepository,
     private installmentRepository: InstallmentRepository,
     private packageRepository: PackageRepository,
+    private userRepository: UserRepository,
   ) {}
 
   async execute(input: Input): Promise<Output> {
-    // find package
-    const package = await this.packageRepository.findById(input.packageId);
+    const packageExists = await this.packageRepository.findById(
+      input.packageId,
+    );
+
+    if (!packageExists) {
+      throw new HttpException('Package not exists', HttpStatus.BAD_REQUEST);
+    }
+
+    const userExists = await this.userRepository.findByEmail(input.userEmail);
+
+    if (!userExists) {
+      throw new HttpException('User not exists', HttpStatus.BAD_REQUEST);
+    }
 
     const invoiceInput = {
-      finalPrice: package.price * 12,
+      finalPrice: packageExists.price * 12,
+      userId: userExists.id,
       ...input,
     };
 
