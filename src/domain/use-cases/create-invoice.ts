@@ -20,7 +20,7 @@ type Output = {
 };
 
 @Injectable()
-export class CreateInvoice implements UseCase<Input, Output> {
+export class CreateInvoiceUseCase implements UseCase<Input, Output> {
   constructor(
     private invoiceRepository: InvoiceRepository,
     private installmentRepository: InstallmentRepository,

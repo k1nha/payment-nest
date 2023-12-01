@@ -1,5 +1,5 @@
 import { InMemoryUserRepository } from 'test/repositories/in-memory-user-repository';
-import { CreateInvoice } from './create-invoice.';
+import { CreateInvoice } from './create-invoice';
 import { InMemoryPackageRepository } from 'test/repositories/in-memory-package-repository';
 import { InMemoryInvoiceRepository } from 'test/repositories/in-memory-invoice-repository';
 import { InMemoryInstallmentRepository } from 'test/repositories/in-memory-installment-repository';

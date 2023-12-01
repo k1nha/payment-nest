@@ -1,6 +1,6 @@
-import { Invoice } from '@prisma/client';
 import { CreateInvoiceDTO } from 'src/domain/dto';
+import { InvoiceEntity } from 'src/domain/entities';
 
 export abstract class InvoiceRepository {
-  abstract create(createInvoiceDTO: CreateInvoiceDTO): Promise<Invoice>;
+  abstract create(createInvoiceDTO: CreateInvoiceDTO): Promise<InvoiceEntity>;
 }

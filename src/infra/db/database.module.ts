@@ -3,11 +3,13 @@ import { PrismaService } from './prisma/prisma.service';
 import {
   PrismaInstallmentRepository,
   PrismaInvoiceRepository,
+  PrismaPackageRepository,
   PrismaUserRepository,
 } from './repositories';
 import {
   InstallmentRepository,
   InvoiceRepository,
+  PackageRepository,
   UserRepository,
 } from 'src/domain/repositories';
 
@@ -26,6 +28,10 @@ import {
     {
       provide: InvoiceRepository,
       useClass: PrismaInvoiceRepository,
+    },
+    {
+      provide: PackageRepository,
+      useClass: PrismaPackageRepository,
     },
   ],
   exports: [PrismaService, UserRepository],

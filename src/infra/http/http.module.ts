@@ -1,11 +1,20 @@
 import { Module } from '@nestjs/common';
 import { DatabaseModule } from '../db/database.module';
-import { CreateUserController } from './controller/create-user.controller';
-import { CreateUserUseCase } from 'src/domain/use-cases';
+import { CreateUserUseCase, CreateInvoiceUseCase } from 'src/domain/use-cases';
+import { CreateInvoiceController, CreateUserController } from './controller';
+import { StripeGateway } from '../gateway/stripe';
+import { PaymentGateway } from '../gateway/payment-gateway';
 
 @Module({
   imports: [DatabaseModule],
-  controllers: [CreateUserController],
-  providers: [CreateUserUseCase],
+  controllers: [CreateUserController, CreateInvoiceController],
+  providers: [
+    CreateUserUseCase,
+    CreateInvoiceUseCase,
+    {
+      provide: PaymentGateway,
+      useClass: StripeGateway,
+    },
+  ],
 })
 export class HttpModule {}
